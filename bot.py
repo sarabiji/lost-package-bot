@@ -1,50 +1,66 @@
-import time
-import openai
-import pytumblr
 import os
-from datetime import datetime
-
-# Load credentials
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-tumblr_client = pytumblr.TumblrRestClient(
-    os.getenv("TUMBLR_CONSUMER_KEY"),
-    os.getenv("TUMBLR_CONSUMER_SECRET"),
-    os.getenv("TUMBLR_OAUTH_TOKEN"),
-    os.getenv("TUMBLR_OAUTH_SECRET")
-)
-
-blog_name = os.getenv("TUMBLR_BLOG_NAME")
+import random
+import pytumblr
+from openai import OpenAI
 
 def generate_poetic_tracking_update():
-    prompt = (
-        "Invent a poetic, surreal status update for a lost package. "
-        "Example: 'March 14 – Package seen in a foggy train station.' "
-        "Use the same format. Only one line."
-    )
+    """Generate a poetic tracking update for a lost package"""
     
-    retries = 3
-    for _ in range(retries):
-        try:
-            response = openai.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return response.choices[0].message.content.strip()
-        except openai.error.RateLimitError:
-            print("Rate limit exceeded. Retrying in 30 seconds...")
-            time.sleep(30)  # Wait 30 seconds before retrying
-    raise Exception("Rate limit exceeded after multiple attempts.")
+    # List of possible package states
+    package_states = [
+        "lost in a sorting facility",
+        "delayed due to weather",
+        "misrouted to another city",
+        "sitting in customs",
+        "awaiting recipient pickup",
+        "damaged in transit",
+        "mistakenly marked as delivered",
+        "on a truck going the wrong direction",
+        "stuck between dimensions",
+        "forgotten in a warehouse corner"
+    ]
+    
+    # Randomly select a package state
+    state = random.choice(package_states)
+    
+    try:
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a poet who writes beautiful, melancholic poems about lost packages."},
+                {"role": "user", "content": f"Write a short, poetic shipping update for a package that is {state}. Keep it under 100 words, wistful and a bit mysterious."}
+            ],
+            max_tokens=200
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        # Fallback poem in case of API issues
+        fallback_poems = [
+            f"Your package wanders, {state}.\nLost in the labyrinth of commerce.\nWaiting, always waiting, for reunion.",
+            f"Between sender and receiver,\n{state}.\nA journey unfinished, a story untold.",
+            f"In transit limbo, {state}.\nSomeday it may find its way home.\nOr perhaps it has found a new destiny."
+        ]
+        print(f"Error calling OpenAI API: {e}")
+        return random.choice(fallback_poems)
 
 def post_to_tumblr():
+    """Post the poetic update to Tumblr"""
     text = generate_poetic_tracking_update()
-    print(f"Generated: {text}")
-    tumblr_client.create_text(
-        blogname=blog_name,
-        state="published",
-        title="",
-        body=text
+    
+    client = pytumblr.TumblrRestClient(
+        os.environ.get("TUMBLR_CONSUMER_KEY"),
+        os.environ.get("TUMBLR_CONSUMER_SECRET"),
+        os.environ.get("TUMBLR_OAUTH_TOKEN"),
+        os.environ.get("TUMBLR_OAUTH_SECRET")
     )
+    
+    blog_name = os.environ.get("TUMBLR_BLOG_NAME")
+    
+    # Create the post
+    client.create_text(blog_name, state="published", body=text, tags=["lost package", "poetry", "shipping update", "bot"])
+    
+    print(f"Posted to {blog_name}: {text}")
 
 if __name__ == "__main__":
     post_to_tumblr()
