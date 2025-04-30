@@ -2,7 +2,7 @@ name: Run Poetic Bot Daily
 
 on:
   schedule:
-    - cron: '11 14 * * *'  # Runs daily at 10:00 UTC
+    - cron: '41 14 * * *'  # Runs daily at 10:00 UTC
   workflow_dispatch:      # Allows manual trigger
 
 jobs:
