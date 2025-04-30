@@ -1,3 +1,4 @@
+import time
 import openai
 import pytumblr
 import os
@@ -21,11 +22,19 @@ def generate_poetic_tracking_update():
         "Example: 'March 14 – Package seen in a foggy train station.' "
         "Use the same format. Only one line."
     )
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content.strip()
+    
+    retries = 3
+    for _ in range(retries):
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.choices[0].message.content.strip()
+        except openai.error.RateLimitError:
+            print("Rate limit exceeded. Retrying in 30 seconds...")
+            time.sleep(30)  # Wait 30 seconds before retrying
+    raise Exception("Rate limit exceeded after multiple attempts.")
 
 def post_to_tumblr():
     text = generate_poetic_tracking_update()
