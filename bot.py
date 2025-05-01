@@ -82,7 +82,7 @@ def post_to_tumblr():
     blog_name = os.environ.get("TUMBLR_BLOG_NAME")
     
     # Create the post
-    client.create_text(blog_name, state="published", body=text, tags=["lost package", "poetry", "shipping update", "bot"])
+    client.create_text(blog_name, state="published", body=text, tags=["lost package", "poetry", "shipping update", "bot","the-lost-package-tracker"])
     
     print(f"Posted to {blog_name}: {text}")
 
