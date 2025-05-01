@@ -26,7 +26,7 @@ def generate_poetic_tracking_update():
     state = random.choice(package_states)
     
     try:
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel("models/gemini-1.5-pro")
         prompt = (
             "You are a poet who writes beautiful, melancholic poems about lost packages.\n"
             f"Write a short, poetic shipping update for a package that is {state}.\n"
