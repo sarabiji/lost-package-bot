@@ -114,7 +114,7 @@ def post_to_tumblr():
             blog_name, 
             state="published", 
             body=text, 
-            tags=["lost package", "shipping update", "bot", "the-lost-package-tracker", 
+            tags=["lost package", "shipping update", "bot", "thelostpackage-bot", 
                   "poetry bot", "melancholy", "postal limbo", "ai generated", "surrealism"]
         )
         
