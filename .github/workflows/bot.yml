@@ -1,21 +1,40 @@
-name: Run Poetic Bot Daily
+name: Post to Tumblr
 on:
+  workflow_dispatch: # Allows manual trigger from the GitHub UI
   schedule:
-    - cron: '0 10 * * *'  # Runs daily at 10:00 UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: "0 12 * * *" # Runs daily at 12:00 UTC (customize as needed)
+
 jobs:
-  run-bot:
+  post:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+          
       - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Run bot
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip freeze  # Print installed packages for debugging
+          
+      - name: Check environment (redacted)
+        run: |
+          echo "Checking environment variables (values redacted)"
+          if [ -n "$GEMINI_API_KEY" ]; then echo "GEMINI_API_KEY is set"; else echo "GEMINI_API_KEY is NOT set"; fi
+          if [ -n "$TUMBLR_CONSUMER_KEY" ]; then echo "TUMBLR_CONSUMER_KEY is set"; else echo "TUMBLR_CONSUMER_KEY is NOT set"; fi
+          if [ -n "$TUMBLR_CONSUMER_SECRET" ]; then echo "TUMBLR_CONSUMER_SECRET is set"; else echo "TUMBLR_CONSUMER_SECRET is NOT set"; fi
+          if [ -n "$TUMBLR_OAUTH_TOKEN" ]; then echo "TUMBLR_OAUTH_TOKEN is set"; else echo "TUMBLR_OAUTH_TOKEN is NOT set"; fi
+          if [ -n "$TUMBLR_OAUTH_SECRET" ]; then echo "TUMBLR_OAUTH_SECRET is set"; else echo "TUMBLR_OAUTH_SECRET is NOT set"; fi
+          if [ -n "$TUMBLR_BLOG_NAME" ]; then echo "TUMBLR_BLOG_NAME is set"; else echo "TUMBLR_BLOG_NAME is NOT set"; fi
+          
+      - name: Run bot script
+        run: |
+          python bot.py
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TUMBLR_CONSUMER_KEY: ${{ secrets.TUMBLR_CONSUMER_KEY }}
@@ -23,4 +42,3 @@ jobs:
           TUMBLR_OAUTH_TOKEN: ${{ secrets.TUMBLR_OAUTH_TOKEN }}
           TUMBLR_OAUTH_SECRET: ${{ secrets.TUMBLR_OAUTH_SECRET }}
           TUMBLR_BLOG_NAME: ${{ secrets.TUMBLR_BLOG_NAME }}
-        run: python bot.py
