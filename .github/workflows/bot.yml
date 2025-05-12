@@ -2,7 +2,7 @@ name: Post to Tumblr
 on:
   workflow_dispatch: # Allows manual trigger from the GitHub UI
   schedule:
-    - cron: "0 12 * * *" # Runs daily at 12:00 UTC (customize as needed)
+    - cron: "30 6,3 * * *" # Runs daily at 12:00 UTC (customize as needed)
 
 jobs:
   post:
