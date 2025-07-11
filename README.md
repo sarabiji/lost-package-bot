@@ -2,6 +2,8 @@
 
 A poetic bot that posts melancholic, surreal shipping updates about lost packages to Tumblr. Built using Google Gemini and Tumblr API, with graceful fallbacks to hand-crafted poems when the API fails.
 
+> 🌐 Follow the bot on Tumblr: [https://www.tumblr.com/thelostpackage-bot](https://www.tumblr.com/thelostpackage-bot)
+
 ## ✨ What It Does
 
 Each time the bot runs (e.g., on a GitHub Action trigger), it:
