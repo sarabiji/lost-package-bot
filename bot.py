@@ -36,60 +36,46 @@ try:
 except Exception as e:
     print(f"ERROR configuring Gemini API: {e}")
     sys.exit(1)
+    
+def generate_tracking_number():
+    return f"{random.randint(1000,9999)}-{random.choice(['X', 'Y', 'Z'])}{random.randint(10,99)}-{random.randint(100,999)}"
 
 def generate_poetic_tracking_update():
-    """Generate a poetic tracking update for a lost package"""
-    
-    # List of possible package states
     package_states = [
         "lost in a sorting facility",
-        "delayed due to weather",
-        "misrouted to another city",
-        "sitting in customs",
-        "awaiting recipient pickup",
-        "damaged in transit",
-        "mistakenly marked as delivered",
-        "on a truck going the wrong direction",
+        "misrouted to a phantom city",
+        "delayed by celestial interference",
+        "flagged by temporal customs",
         "stuck between dimensions",
-        "forgotten in a warehouse corner"
+        "left at a nonexistent doorstep",
+        "unboxed in a memory not your own",
+        "delivered to the void",
+        "transferred to the Department of Regret",
+        "looping through undeliverable time zones"
     ]
-    
-    # Randomly select a package state
     state = random.choice(package_states)
-    print(f"Selected package state: {state}")
+    tracking = generate_tracking_number()
+
+    prompt = (
+        f"You're a poetic postal entity. Write a 40-word surreal shipping update.\n"
+        f"Package Tracking #: {tracking}\n"
+        f"Status: {state}\n"
+        f"Tone: haunting, beautiful, eerie. Use imagery and subtle melancholy."
+    )
     
     try:
-        print("Creating Gemini model instance")
-        model = genai.GenerativeModel("gemini-1.5-pro")  # Corrected model name
-        
-        print("Creating prompt")
-        prompt = (
-            "You are a poet who writes beautiful, melancholic poems about lost packages.\n"
-            f"Write a short, poetic shipping update for a package that is {state}.\n"
-            "Keep it under 50 words, wistful and a bit mysterious."
-        )
-        
-        print("Generating content")
+        model = genai.GenerativeModel("gemini-1.5-pro")
         response = model.generate_content(prompt)
-        print("Successfully generated content from Gemini API")
-        return response.text.strip()
-        
-    except Exception as e:
-        print(f"ERROR generating content from Gemini: {str(e)}")
-        # Fallback poem in case of API issues
+        poem = response.text.strip()
+    except Exception:
         fallback_poems = [
-            # Original concept poems with surreal, narrative elements
-            f"Your package now whispers to dust motes, {state}.\nIt tells tales of conveyor belts that spiral into nebulae,\nof barcode scanners that read the language of stars.\nThe cardboard remembers your fingerprints, waiting.",
-            f"In dreams of bubble wrap and packing tape,\nyour parcel has become a traveler {state}.\nIt befriended a forgotten luggage at midnight,\nlearned secrets from rain-soaked labels,\nand writes you postcards it cannot send.",
-            f"The tracking number transformed into a constellation last night.\nYour package, {state},\ndances with moonlight through warehouse windows,\nits contents shifting like tides\nunder the watch of fluorescent guardians.",
-            f"What stories your shipment collects, {state}.\nIt's witnessed the midnight confessions of forklift operators,\nheard the lullabies of sorting machines,\nbefore slipping between the cracks of ordinary time.",
-            f"Somewhere between departure and arrival,\nyour box entered a postal dimension {state}.\nThere, packages grow memories like moss,\nand delivery dates stretch like taffy\npulled by the hands of forgotten clock-makers.",
-            f"The address label faded into a map of an impossible city.\nYour parcel wanders there now, {state},\nwhere streets are named after lost children's toys\nand every intersection smells of cardboard and possibility.",
-            f"In the cathedral of misplaced things,\nyour package kneels {state}.\nIt prays to patron saints of zip codes,\nconfesses desires wrapped in brown paper,\nand waits for redemption in the form of delivery.",
+            f"📦 Tracking #{tracking}\nStatus: {state}\n\nIt waits beside forgotten crates,\nwrapped in shadow, addressed in dust.\nSorting arms passed it without seeing.\nIt hums quietly now—an echo of something once meant for you.",
+            f"📦 Tracking #{tracking}\nStatus: {state}\n\nThe barcode is now a prayer.\nYour package wanders through expired routes,\nclutching fragments of memory wrapped in string.\nArrival: uncertain. Intention: unchanged.",
         ]
-        
-        print("Using fallback poem due to error")
-        return random.choice(fallback_poems)
+        poem = random.choice(fallback_poems)
+
+    return f"📦 Tracking #{tracking}\nStatus: {state}\n\n{poem}"
+
 
 def post_to_tumblr():
     """Post the poetic update to Tumblr"""
