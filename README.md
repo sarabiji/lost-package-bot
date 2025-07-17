@@ -1,10 +1,10 @@
-# 📦 lost-package-bot
+# lost-package-bot
 
 A poetic bot that posts melancholic, surreal shipping updates about lost packages to Tumblr. Built using Google Gemini and Tumblr API, with graceful fallbacks to hand-crafted poems when the API fails.
 
-> 🌐 Follow the bot on Tumblr: [https://www.tumblr.com/thelostpackage-bot](https://www.tumblr.com/thelostpackage-bot)
+> Follow the bot on Tumblr: [https://www.tumblr.com/thelostpackage-bot](https://www.tumblr.com/thelostpackage-bot)
 
-## ✨ What It Does
+## What It Does
 
 Each time the bot runs (e.g., on a GitHub Action trigger), it:
 
@@ -13,14 +13,14 @@ Each time the bot runs (e.g., on a GitHub Action trigger), it:
 - Posts that poem to a Tumblr blog
 - Falls back to a curated set of poetic messages if the API fails
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - [Google Generative AI (Gemini)](https://ai.google.dev/)
 - [pytumblr](https://github.com/tumblr/pytumblr)
 - GitHub Actions (for automation)
 - Tumblr API
 
-## 🔐 Secrets Used
+## Secrets Used
 
 All sensitive credentials are stored securely as GitHub Secrets:
 
@@ -31,7 +31,7 @@ All sensitive credentials are stored securely as GitHub Secrets:
 - `TUMBLR_OAUTH_SECRET` – Tumblr OAuth Secret
 - `TUMBLR_BLOG_NAME` – Your blog’s name (e.g., `my-blog.tumblr.com`)
 
-## 📄 Requirements
+## Requirements
 
 Install dependencies using:
 
@@ -39,7 +39,7 @@ Install dependencies using:
 pip install -r requirements.txt
 ```
 
-## 🚀 Usage
+## Usage
 
 To run manually:
 
@@ -49,7 +49,7 @@ python bot.py
 
 Or trigger it through GitHub Actions if you've set up a workflow.
 
-## 🏷 Suggested Tumblr Tags
+## Suggested Tumblr Tags
 
 Posts are auto-tagged with:
 
